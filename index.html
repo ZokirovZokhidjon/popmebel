@@ -327,7 +327,7 @@
 
     const TELEGRAM_BOT_TOKEN = "9261292871:AAGkA06Ax7f9MPU9hKXjmDePwwiFX9FM994"; // @BotFather дан олинган токен
     const TELEGRAM_CHAT_ID = "-5228137106"; // Гуруҳнинг ID рақами
-    
+
     function escapeHtml(str) {
         return String(str || "")
             .replace(/&/g, "&amp;")
@@ -336,7 +336,7 @@
             .replace(/"/g, "&quot;");
     }
 
-    async function sendOrderToTelegram(order) {
+async function sendOrderToTelegram(order) {
         if (!TELEGRAM_BOT_TOKEN || TELEGRAM_BOT_TOKEN.includes("СИЗНИНГ") || !TELEGRAM_CHAT_ID) return;
 
         const text =
@@ -356,14 +356,17 @@
                     parse_mode: "HTML"
                 })
             });
-            if (!response.ok) {
-                console.error("Telegram API хатоси:", response.status);
+            const data = await response.json();
+            if (!response.ok || !data.ok) {
+                console.error("Telegram API хатоси:", data.description || response.status);
+            } else {
+                console.log("Telegram хабари юборилди!");
             }
         } catch (err) {
             console.error("Telegram хабари юборилмади:", err);
         }
     }
-
+    
     // 1. АНИҚ СОАТ ВА САНА
     function updateClock() {
         const now = new Date();
