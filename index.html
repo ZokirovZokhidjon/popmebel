@@ -12,7 +12,7 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
+<link rel="icon" href="data:,">
     <style>
         #google_translate_element,
         .goog-te-banner-frame,
@@ -286,8 +286,7 @@
             <a href="admin.html" class="hover:text-sky-400 transition">Админ панел</a>
         </div>
     </div>
-</footer>
-<script type="text/javascript">
+</footer><script type="text/javascript">
     function googleTranslateElementInit() {
         new google.translate.TranslateElement({
             pageLanguage: 'uz',
@@ -301,229 +300,293 @@
 
     function setLanguage(lang) {
         localStorage.setItem("app_lang", lang);
+        const hostname = window.location.hostname;
+
         document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-        document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; domain=" + window.location.hostname + "; path=/;";
+        if (hostname) {
+            document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; domain=" + hostname + "; path=/;";
+        }
+
         if (lang !== 'uz') {
             document.cookie = "googtrans=/uz/" + lang + "; path=/;";
-            document.cookie = "googtrans=/uz/" + lang + "; domain=" + window.location.hostname + "; path=/;";
+            if (hostname) {
+                document.cookie = "googtrans=/uz/" + lang + "; domain=" + hostname + "; path=/;";
+            }
         }
+
         location.reload();
     }
 
     function updateLangButtons(lang) {
-        document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('!bg-sky-600', '!border-sky-500', '!text-white'));
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.classList.remove('!bg-sky-600', '!border-sky-500', '!text-white');
+        });
         const activeBtn = document.getElementById(`lang-${lang}`);
-        if (activeBtn) activeBtn.classList.add('!bg-sky-600', '!border-sky-500', '!text-white');
+        if (activeBtn) {
+            activeBtn.classList.add('!bg-sky-600', '!border-sky-500', '!text-white');
+        }
     }
 </script>
 <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
 <script>
-    const POSTS_KEY = "pop_mebel_local_posts";
-    const ORDERS_KEY = "pop_mebel_local_orders";
-    const VISITS_KEY = "pop_mebel_local_visits";
-    const COUNTRIES_KEY = "pop_mebel_local_countries";
-    const SESSION_VISIT_KEY = "pop_mebel_session_counted";
-
-    const TELEGRAM_BOT_TOKEN = "9261292871:AAGkA06Ax7f9MPU9hKXjmDePwwiFX9FM994"; // @BotFather дан олинган токен
-    const TELEGRAM_CHAT_ID = "-5228137106"; // Гуруҳнинг ID рақами
-
-    function escapeHtml(str) {
-        return String(str || "")
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;");
-    }
-
-async function sendOrderToTelegram(order) {
-        if (!TELEGRAM_BOT_TOKEN || TELEGRAM_BOT_TOKEN.includes("СИЗНИНГ") || !TELEGRAM_CHAT_ID) return;
-
-        const text =
-            `🛋️ <b>Янги буюртма (Pop Mebel Ta'mirlash)</b>\n\n` +
-            `👤 <b>Мижоз:</b> ${escapeHtml(order.name)}\n` +
-            `📞 <b>Телефон:</b> ${escapeHtml(order.phone)}\n` +
-            `🛠️ <b>Хизмат / Изоҳ:</b> ${escapeHtml(order.note)}\n` +
-            `📅 <b>Сана:</b> ${escapeHtml(order.date)}`;
-
-        try {
-            const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    chat_id: TELEGRAM_CHAT_ID,
-                    text: text,
-                    parse_mode: "HTML"
-                })
-            });
-            const data = await response.json();
-            if (!response.ok || !data.ok) {
-                console.error("Telegram API хатоси:", data.description || response.status);
-            } else {
-                console.log("Telegram хабари юборилди!");
-            }
-        } catch (err) {
-            console.error("Telegram хабари юборилмади:", err);
-        }
-    }
-    
-    // 1. АНИҚ СОАТ ВА САНА
-    function updateClock() {
-        const now = new Date();
-        const timeStr = now.toLocaleTimeString("uz-UZ", { hour12: false });
-        const dateStr = now.toLocaleDateString("uz-UZ", { year: "numeric", month: "long", day: "numeric" });
-        document.getElementById("liveClock").textContent = timeStr;
-        document.getElementById("liveDate").textContent = dateStr;
-    }
-    updateClock();
-    setInterval(updateClock, 1000);
-
-    // 2. КИРУВЧИЛАР СОНИ ВА ДАВЛАТ ИНДИКАТОРИ (БИР СЕССИЯДА БИР МАРТА САНАЙДИ)
-    function renderVisitorStats() {
-        const visits = Number(localStorage.getItem(VISITS_KEY) || 0);
-        const countries = JSON.parse(localStorage.getItem(COUNTRIES_KEY) || "{}");
-        document.getElementById("totalVisitsCount").textContent = visits;
-
-        const badges = document.getElementById("countryBadges");
-        badges.innerHTML = "";
-        Object.keys(countries).forEach(c => {
-            badges.innerHTML += `
-                <span class="px-2.5 py-1 rounded-full bg-slate-950 border border-slate-800 text-slate-300 font-semibold">
-                    <i class="fas fa-map-marker-alt text-rose-400 mr-1"></i>${escapeHtml(c)}: <strong class="text-sky-400">${Number(countries[c] || 0)}</strong>
-                </span>
-            `;
-        });
-    }
-
-    async function trackVisitorLocal() {
-        let countryName = "O'zbekiston (Локал)";
-        try {
-            const res = await fetch("https://ipapi.co/json/");
-            if (res.ok) {
-                const geo = await res.json();
-                if (geo && geo.country_name) countryName = geo.country_name;
-            }
-        } catch (_) {}
-
-        document.getElementById("currentVisitorCountry").textContent = countryName;
-
-        if (!sessionStorage.getItem(SESSION_VISIT_KEY)) {
-            sessionStorage.setItem(SESSION_VISIT_KEY, "1");
-            const nextVisits = Number(localStorage.getItem(VISITS_KEY) || 0) + 1;
-            localStorage.setItem(VISITS_KEY, String(nextVisits));
-
-            const countries = JSON.parse(localStorage.getItem(COUNTRIES_KEY) || "{}");
-            countries[countryName] = (countries[countryName] || 0) + 1;
-            localStorage.setItem(COUNTRIES_KEY, JSON.stringify(countries));
-        }
-
-        renderVisitorStats();
-    }
-    trackVisitorLocal();
-
-    // 3. ХИЗМАТ ТАНЛАШ ВА БУЮРТМА ҚОЛДИРИШ
-    window.selectService = (serviceText) => {
-        const noteInput = document.getElementById("clientNote");
-        if (noteInput) {
-            noteInput.value = serviceText;
-            noteInput.focus();
-        }
-    };
-
-    document.getElementById("orderForm").onsubmit = (e) => {
-        e.preventDefault();
-        const name = document.getElementById("clientName").value.trim();
-        const phone = document.getElementById("clientPhone").value.trim();
-        const note = document.getElementById("clientNote").value.trim() || "Мебель таъмирлаш бўйича мурожаат";
-        if (!name || !phone) return;
-
-        const newOrder = {
-            id: Date.now(),
-            name,
-            phone,
-            note,
-            date: new Date().toLocaleDateString("uz-UZ")
+    (function () {
+        const CONFIG = {
+            postsKey: "pop_mebel_local_posts",
+            ordersKey: "pop_mebel_local_orders",
+            visitsKey: "pop_mebel_local_visits",
+            countriesKey: "pop_mebel_local_countries",
+            sessionVisitKey: "pop_mebel_session_counted",
+            telegramBotToken: "9261292871:AAGkA06Ax7f9MPU9hKXjmDePwwiFX9FM994",
+            telegramChatId: "-5228137106"
         };
 
-        const orders = JSON.parse(localStorage.getItem(ORDERS_KEY) || "[]");
-        orders.unshift(newOrder);
-        localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
+        let currentSearch = "";
 
-        sendOrderToTelegram(newOrder);
-
-        document.getElementById("orderForm").reset();
-        const msg = document.getElementById("orderMsg");
-        msg.classList.remove("hidden");
-        setTimeout(() => msg.classList.add("hidden"), 4000);
-    };
-
-    // 4. АДМИНДАН КЕЛГАН МАЪЛУМОТЛАРНИ ЧИҚАРИШ
-    let currentSearch = "";
-
-    window.searchPosts = () => {
-        currentSearch = (document.getElementById("searchInput")?.value || "").toLowerCase().trim();
-        renderMainPosts();
-    };
-
-    window.resetSearch = (btn) => {
-        document.querySelectorAll(".menu-btn").forEach(b => b.classList.remove("active"));
-        if (btn) btn.classList.add("active");
-        const input = document.getElementById("searchInput");
-        if (input) input.value = "";
-        currentSearch = "";
-        renderMainPosts();
-    };
-
-    function renderMainPosts() {
-        let posts = [];
-        try {
-            posts = JSON.parse(localStorage.getItem(POSTS_KEY)) || [];
-        } catch {
-            posts = [];
+        function escapeHtml(str) {
+            return String(str || "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;");
         }
 
-        const wrapper = document.getElementById("newsWrapper");
-        wrapper.innerHTML = "";
-
-        const filtered = posts.filter(p =>
-            !currentSearch ||
-            (p.title || "").toLowerCase().includes(currentSearch) ||
-            (p.text || "").toLowerCase().includes(currentSearch)
-        );
-
-        if (!filtered.length) {
-            wrapper.innerHTML = `<p class="col-span-full text-center text-slate-400 py-12">Ҳозирча маълумот йўқ. <a href="admin.html" class="text-sky-400 underline">Админ панел</a>дан мақола қўшинг.</p>`;
-            return;
+        function safeJsonParse(raw, fallback) {
+            try {
+                const parsed = JSON.parse(raw);
+                return parsed ?? fallback;
+            } catch {
+                return fallback;
+            }
         }
 
-        filtered.forEach(p => {
-            const safeTitle = escapeHtml(p.title || "");
-            const safeText = escapeHtml(p.text || "");
-            const safeDate = escapeHtml(p.date || "");
-            const imgHtml = p.image
-                ? `<img src="${escapeHtml(p.image)}" alt="${safeTitle}" class="w-full h-48 object-cover bg-slate-800">`
-                : "";
+        // 1. TELEGRAM'ГА БУЮРТМА ЮБОРИШ
+        async function sendOrderToTelegram(order) {
+            const { telegramBotToken: token, telegramChatId: chatId } = CONFIG;
+            if (!token || !chatId) return;
 
-            wrapper.innerHTML += `
-                <article class="bg-slate-900/90 border border-slate-800 rounded-2xl overflow-hidden shadow-xl hover:border-sky-500/50 transition flex flex-col justify-between">
-                    <div>
-                        ${imgHtml}
-                        <div class="p-5">
-                            <span class="inline-block text-[10px] font-extrabold uppercase bg-sky-600/20 text-sky-400 border border-sky-500/30 px-2.5 py-1 rounded-md mb-3">Маълумот</span>
-                            <h3 class="text-base sm:text-lg font-bold text-slate-100 mb-2">${safeTitle}</h3>
-                            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed line-clamp-4 whitespace-pre-line">${safeText}</p>
+            const text =
+                `🛋️ <b>Янги буюртма (Pop Mebel Ta'mirlash)</b>\n\n` +
+                `👤 <b>Мижоз:</b> ${escapeHtml(order.name)}\n` +
+                `📞 <b>Телефон:</b> ${escapeHtml(order.phone)}\n` +
+                `🛠️ <b>Хизмат / Изоҳ:</b> ${escapeHtml(order.note)}\n` +
+                `📅 <b>Сана:</b> ${escapeHtml(order.date)}`;
+
+            try {
+                const response = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        chat_id: chatId,
+                        text: text,
+                        parse_mode: "HTML"
+                    })
+                });
+                const data = await response.json();
+                if (!response.ok || !data.ok) {
+                    console.error("Telegram API хатоси:", data.description || response.status);
+                } else {
+                    console.log("Telegram хабари юборилди.");
+                }
+            } catch (err) {
+                console.error("Telegram хабари юборилмади:", err);
+            }
+        }
+
+        // 2. АНИҚ СОАТ ВА САНА
+        function updateClock() {
+            const now = new Date();
+            const clockEl = document.getElementById("liveClock");
+            const dateEl = document.getElementById("liveDate");
+
+            if (clockEl) {
+                clockEl.textContent = now.toLocaleTimeString("uz-UZ", { hour12: false });
+            }
+            if (dateEl) {
+                dateEl.textContent = now.toLocaleDateString("uz-UZ", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric"
+                });
+            }
+        }
+
+        // 3. КИРУВЧИЛАР СОНИ ВА ДАВЛАТ ИНДИКАТОРИ
+        function renderVisitorStats() {
+            const visits = Number(localStorage.getItem(CONFIG.visitsKey) || 0);
+            const countries = safeJsonParse(localStorage.getItem(CONFIG.countriesKey), {});
+
+            const totalEl = document.getElementById("totalVisitsCount");
+            if (totalEl) totalEl.textContent = visits;
+
+            const badges = document.getElementById("countryBadges");
+            if (!badges) return;
+
+            badges.innerHTML = "";
+            Object.keys(countries).forEach(country => {
+                const count = Number(countries[country] || 0);
+                badges.innerHTML += `
+                    <span class="px-2.5 py-1 rounded-full bg-slate-950 border border-slate-800 text-slate-300 font-semibold">
+                        <i class="fas fa-map-marker-alt text-rose-400 mr-1"></i>${escapeHtml(country)}: <strong class="text-sky-400">${count}</strong>
+                    </span>
+                `;
+            });
+        }
+
+        async function trackVisitorLocal() {
+            let countryName = "O'zbekiston (Локал)";
+            try {
+                const res = await fetch("https://ipapi.co/json/");
+                if (res.ok) {
+                    const geo = await res.json();
+                    if (geo && geo.country_name) {
+                        countryName = geo.country_name;
+                    }
+                }
+            } catch (_) {}
+
+            const countryEl = document.getElementById("currentVisitorCountry");
+            if (countryEl) countryEl.textContent = countryName;
+
+            if (!sessionStorage.getItem(CONFIG.sessionVisitKey)) {
+                sessionStorage.setItem(CONFIG.sessionVisitKey, "1");
+
+                const nextVisits = Number(localStorage.getItem(CONFIG.visitsKey) || 0) + 1;
+                localStorage.setItem(CONFIG.visitsKey, String(nextVisits));
+
+                const countries = safeJsonParse(localStorage.getItem(CONFIG.countriesKey), {});
+                countries[countryName] = (Number(countries[countryName]) || 0) + 1;
+                localStorage.setItem(CONFIG.countriesKey, JSON.stringify(countries));
+            }
+
+            renderVisitorStats();
+        }
+
+        // 4. ХИЗМАТ ТАНЛАШ ВА БУЮРТМА ҚОЛДИРИШ
+        window.selectService = function (serviceText) {
+            const noteInput = document.getElementById("clientNote");
+            if (noteInput) {
+                noteInput.value = serviceText;
+                noteInput.focus();
+            }
+        };
+
+        function initOrderForm() {
+            const form = document.getElementById("orderForm");
+            if (!form) return;
+
+            form.onsubmit = function (e) {
+                e.preventDefault();
+
+                const nameInput = document.getElementById("clientName");
+                const phoneInput = document.getElementById("clientPhone");
+                const noteInput = document.getElementById("clientNote");
+
+                const name = (nameInput?.value || "").trim();
+                const phone = (phoneInput?.value || "").trim();
+                const note = (noteInput?.value || "").trim() || "Мебель таъмирлаш бўйича мурожаат";
+
+                if (!name || !phone) return;
+
+                const newOrder = {
+                    id: Date.now(),
+                    name,
+                    phone,
+                    note,
+                    date: new Date().toLocaleDateString("uz-UZ")
+                };
+
+                const orders = safeJsonParse(localStorage.getItem(CONFIG.ordersKey), []);
+                orders.unshift(newOrder);
+                localStorage.setItem(CONFIG.ordersKey, JSON.stringify(orders));
+
+                sendOrderToTelegram(newOrder);
+
+                form.reset();
+                const msg = document.getElementById("orderMsg");
+                if (msg) {
+                    msg.classList.remove("hidden");
+                    setTimeout(() => msg.classList.add("hidden"), 4000);
+                }
+            };
+        }
+
+        // 5. МАҚОЛАЛАРНИ ЧИҚАРИШ ВА ҚИДИРИШ
+        window.searchPosts = function () {
+            const input = document.getElementById("searchInput");
+            currentSearch = (input?.value || "").toLowerCase().trim();
+            renderMainPosts();
+        };
+
+        window.resetSearch = function (btn) {
+            document.querySelectorAll(".menu-btn").forEach(b => b.classList.remove("active"));
+            if (btn) btn.classList.add("active");
+
+            const input = document.getElementById("searchInput");
+            if (input) input.value = "";
+
+            currentSearch = "";
+            renderMainPosts();
+        };
+
+        function renderMainPosts() {
+            const wrapper = document.getElementById("newsWrapper");
+            if (!wrapper) return;
+
+            const posts = safeJsonParse(localStorage.getItem(CONFIG.postsKey), []);
+            const filtered = Array.isArray(posts)
+                ? posts.filter(p =>
+                    !currentSearch ||
+                    String(p.title || "").toLowerCase().includes(currentSearch) ||
+                    String(p.text || "").toLowerCase().includes(currentSearch)
+                )
+                : [];
+
+            wrapper.innerHTML = "";
+
+            if (!filtered.length) {
+                wrapper.innerHTML = `
+                    <p class="col-span-full text-center text-slate-400 py-12">
+                        Ҳозирча маълумот йўқ. <a href="admin.html" class="text-sky-400 underline">Админ панел</a>дан мақола қўшинг.
+                    </p>
+                `;
+                return;
+            }
+
+            filtered.forEach(p => {
+                const safeTitle = escapeHtml(p.title || "");
+                const safeText = escapeHtml(p.text || "");
+                const safeDate = escapeHtml(p.date || "");
+                const imgHtml = p.image
+                    ? `<img src="${escapeHtml(p.image)}" alt="${safeTitle}" class="w-full h-48 object-cover bg-slate-800">`
+                    : "";
+
+                wrapper.innerHTML += `
+                    <article class="bg-slate-900/90 border border-slate-800 rounded-2xl overflow-hidden shadow-xl hover:border-sky-500/50 transition flex flex-col justify-between">
+                        <div>
+                            ${imgHtml}
+                            <div class="p-5">
+                                <span class="inline-block text-[10px] font-extrabold uppercase bg-sky-600/20 text-sky-400 border border-sky-500/30 px-2.5 py-1 rounded-md mb-3">Маълумот</span>
+                                <h3 class="text-base sm:text-lg font-bold text-slate-100 mb-2">${safeTitle}</h3>
+                                <p class="text-xs sm:text-sm text-slate-300 leading-relaxed line-clamp-4 whitespace-pre-line">${safeText}</p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="px-5 pb-4 pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
-                        <span><i class="far fa-calendar-alt text-sky-400 mr-1"></i>${safeDate}</span>
-                        <a href="post.html" class="text-sky-400 hover:underline font-bold">Батафсил</a>
-                    </div>
-                </article>
-            `;
-        });
-    }
+                        <div class="px-5 pb-4 pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
+                            <span><i class="far fa-calendar-alt text-sky-400 mr-1"></i>${safeDate}</span>
+                            <a href="post.html" class="text-sky-400 hover:underline font-bold">Батафсил</a>
+                        </div>
+                    </article>
+                `;
+            });
+        }
 
-    renderMainPosts();
+        // ИШГА ТУШИРИШ
+        updateClock();
+        setInterval(updateClock, 1000);
+        trackVisitorLocal();
+        initOrderForm();
+        renderMainPosts();
+    })();
 </script>
 </body>
 </html>
