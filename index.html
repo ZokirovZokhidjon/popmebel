@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pop Mebel Ta'mirlash - Асосий Саҳифа</title>
+
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Pop Mebel Ta'mirlash">
+    <meta property="og:title" content="Pop Mebel Ta'mirlash - Поп туманида мебель таъмирлаш">
+    <meta property="og:description" content="Поп туманида мебель таъмирлаш, перетяжка ва янгилаш устахонаси.">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        #google_translate_element,
+        .goog-te-banner-frame,
+        .skiptranslate,
+        .goog-te-spinner-pos {
+            display: none !important;
+        }
+        body {
+            top: 0px !important;
+            position: static !important;
+            background:
+                linear-gradient(rgba(2, 6, 23, 0.74), rgba(2, 6, 23, 0.86)),
+                url("https://images.openai.com/static-rsc-4/Go4ZOsvlKkPi5oADeDnSgJ0BZ44yXw-DzrMwXBdQP0y3-S751GyEoMP8Ow4G2BNnm5Agf_P5Wr9HDdxH3dukN_tX_YworXBG6Mj73JSG6QXvUMFlUEz_kFY7tS9oIwdvaMU-b54keJcf8LH6GaZ8BdsYFrNnfMB9cCdePFA-Vr_3D6VCTQTRCGK547UQT7mq?purpose=fullsize")
+                center center / cover fixed no-repeat !important;
+            background-color: #020617 !important;
+        }
+        .goog-te-gadget {
+            height: 0 !important;
+            overflow: hidden !important;
+        }
+
+        header,
+        main,
+        footer {
+            position: relative;
+            z-index: 1;
+        }
+
+        #orderSection {
+            background: rgba(15, 23, 42, 0.88);
+            backdrop-filter: blur(8px);
+        }
+
+        article {
+            backdrop-filter: blur(6px);
+        }
+
+        .biocyte-circle {
+            background: linear-gradient(145deg, #f8fafc 0%, #cbd5e1 55%, #94a3b8 100%);
+            color: #0f172a;
+            border: 2.5px solid #64748b;
+            box-shadow: inset 0 2px 5px rgba(255, 255, 255, 0.95), 0 6px 15px rgba(0, 0, 0, 0.75);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .biocyte-circle:hover, .biocyte-circle.active {
+            background: linear-gradient(145deg, #ffffff 0%, #38bdf8 50%, #0284c7 100%);
+            color: #ffffff;
+            border-color: #7dd3fc;
+            box-shadow: inset 0 2px 8px rgba(255, 255, 255, 1), 0 0 22px rgba(56, 189, 248, 0.9);
+            transform: scale(1.08);
+        }
+
+        .node-circle {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #0f172a;
+            border: 3px solid #94a3b8;
+            box-shadow: 0 0 10px rgba(148, 163, 184, 0.8);
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+        .biocyte-circle:hover + .node-circle,
+        .biocyte-circle.active + .node-circle {
+            background: #38bdf8;
+            border-color: #ffffff;
+            box-shadow: 0 0 15px #38bdf8;
+        }
+
+        .metallic-text {
+            background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 55%, #64748b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.7);
+        }
+    </style>
+</head>
+<body class="text-slate-100 font-sans min-h-screen selection:bg-sky-500 selection:text-black flex flex-col overflow-x-hidden">
+
+<div id="google_translate_element"></div>
+
+<!-- ЮҚОРИ МАРҚИ БАННЕР -->
+<div class="bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 border-b border-slate-800 text-sky-400 py-2 text-center text-xs sm:text-sm font-semibold tracking-widest uppercase">
+    <marquee behavior="scroll" direction="left" scrollamount="7">
+        🛋️ POP MEBEL TA'MIRLASH USTAXONASI — Поп туманида юмшоқ ва корпус мебелларни таъмирлаш ва янгилаш хизмати!
+    </marquee>
+</div>
+
+<!-- ЮҚОРИ БАР: ТИЛЛАР, АНИҚ СОАТ ВА АДМИН -->
+<div class="max-w-7xl w-full mx-auto px-4 pt-4 flex flex-wrap justify-between items-center gap-3 z-50">
+    <div class="lang-buttons notranslate flex gap-2">
+        <button class="lang-btn text-xs font-bold px-3 py-1 rounded-full border border-slate-700 bg-slate-900 text-slate-300 hover:text-white transition" id="lang-uz" onclick="setLanguage('uz')">Ўзб</button>
+        <button class="lang-btn text-xs font-bold px-3 py-1 rounded-full border border-slate-700 bg-slate-900 text-slate-300 hover:text-white transition" id="lang-ru" onclick="setLanguage('ru')">Рус</button>
+        <button class="lang-btn text-xs font-bold px-3 py-1 rounded-full border border-slate-700 bg-slate-900 text-slate-300 hover:text-white transition" id="lang-en" onclick="setLanguage('en')">Eng</button>
+    </div>
+
+    <!-- АНИҚ СОАТ ВА САНА ИНДИКАТОРИ -->
+    <div class="flex items-center gap-2.5 bg-slate-900/90 border border-slate-800 px-3.5 py-1.5 rounded-full shadow-lg">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span id="liveClock" class="text-xs sm:text-sm font-mono font-bold text-sky-300 tracking-wider">00:00:00</span>
+        <span id="liveDate" class="hidden sm:inline text-[11px] text-slate-400 border-l border-slate-700 pl-2.5"></span>
+    </div>
+
+    <a class="admin-icon notranslate text-2xl text-slate-400 hover:text-sky-400 transition" href="admin.html" title="Админ панел">
+        <i class="fas fa-user-circle"></i>
+    </a>
+</div>
+
+<!-- КИРУВЧИЛАР СОНИ ВА ДАВЛАТ ИНДИКАТОРИ ПАНЕЛИ -->
+<div class="max-w-7xl w-full mx-auto px-4 pt-4">
+    <div class="bg-slate-900/85 backdrop-blur-md border border-slate-800 rounded-2xl p-3.5 flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-lg">
+        <div class="flex flex-wrap items-center gap-4 text-xs">
+            <div class="flex items-center gap-2">
+                <i class="fas fa-users text-sky-400"></i>
+                <span class="text-slate-400">Киришлар сони:</span>
+                <strong id="totalVisitsCount" class="text-sm font-black text-white bg-sky-600/20 border border-sky-500/30 px-2.5 py-0.5 rounded-full">0</strong>
+            </div>
+            <div class="flex items-center gap-2">
+                <i class="fas fa-globe-asia text-emerald-400"></i>
+                <span class="text-slate-400">Сизнинг давлатингиз:</span>
+                <strong id="currentVisitorCountry" class="text-emerald-400 font-bold">Аниқланмоқда...</strong>
+            </div>
+        </div>
+        <div id="countryBadges" class="flex flex-wrap items-center gap-1.5 text-[11px]"></div>
+    </div>
+</div>
+
+<!-- АСОСИЙ HERO БЛОК -->
+<header class="relative max-w-7xl w-full mx-auto px-4 py-8 lg:py-10 border-b border-slate-800/80">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+
+        <!-- ЧАП ТОМОН: БРЕНДИНГ, ХИЗМАТЛАР, ҚИДИРУВ ВА БУЮРТМА ФОРМАСИ -->
+        <div class="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left space-y-5">
+            <div class="flex items-center space-x-4">
+                <img src="logo1.jpg" alt="logo" class="w-20 h-20 sm:w-24 sm:h-24 rounded-lg border-2 border-slate-600 shadow-2xl object-cover" onerror="this.style.display='none'">
+                <div>
+                    <h1 class="notranslate text-3xl sm:text-5xl font-black tracking-tight metallic-text uppercase leading-tight">
+                        POP MEBEL TA'MIRLASH
+                    </h1>
+                    <p class="text-xs sm:text-sm tracking-[0.2em] text-sky-400 uppercase font-semibold mt-1 border-t border-slate-800 pt-1">
+                        Поп тумани • Мебель таъмирлаш устахонаси
+                    </p>
+                </div>
+            </div>
+
+            <!-- ТЕЗКОР ХИЗМАТ ТАНЛАШ ТУГМАЛАРИ -->
+            <div class="w-full max-w-xl">
+                <p class="text-[11px] uppercase tracking-wider text-slate-400 font-bold mb-2">
+                    Хизматни танланг (формага автоматик тушади):
+                </p>
+                <div class="flex flex-wrap justify-center lg:justify-start gap-2">
+                    <button type="button" onclick="selectService('Диван перетяжкаси ва мато алмаштириш')" class="px-3 py-1.5 rounded-xl bg-slate-900/90 hover:bg-sky-600 text-slate-200 hover:text-white border border-slate-700 text-xs font-semibold transition">
+                        🛋️ Диван перетяжка
+                    </button>
+                    <button type="button" onclick="selectService('Паралон ва пружина блокни алмаштириш')" class="px-3 py-1.5 rounded-xl bg-slate-900/90 hover:bg-sky-600 text-slate-200 hover:text-white border border-slate-700 text-xs font-semibold transition">
+                        🧱 Паралон ва пружина
+                    </button>
+                    <button type="button" onclick="selectService('Кресло ва стулларни таъмирлаш')" class="px-3 py-1.5 rounded-xl bg-slate-900/90 hover:bg-sky-600 text-slate-200 hover:text-white border border-slate-700 text-xs font-semibold transition">
+                        🪑 Кресло ва стул
+                    </button>
+                    <button type="button" onclick="selectService('Шкаф, стол ва корпус мебел таъмири')" class="px-3 py-1.5 rounded-xl bg-slate-900/90 hover:bg-sky-600 text-slate-200 hover:text-white border border-slate-700 text-xs font-semibold transition">
+                        🪵 Шкаф ва стол
+                    </button>
+                </div>
+            </div>
+
+            <!-- ҚИДИРУВ ПАНЕЛИ -->
+            <div class="w-full max-w-lg flex items-center bg-slate-950/90 border-2 border-slate-800 rounded-full p-1.5 shadow-2xl focus-within:border-sky-500 transition">
+                <input type="text" id="searchInput" oninput="searchPosts()" placeholder="Мақола ёки хизмат қидириш..." class="w-full bg-transparent px-4 py-2 text-sm text-slate-200 outline-none placeholder-slate-500">
+                <button type="button" onclick="searchPosts()" class="px-5 sm:px-6 py-2 bg-gradient-to-r from-sky-600 to-blue-700 hover:from-sky-500 hover:to-blue-600 text-white text-xs font-black uppercase rounded-full shadow-lg transition">
+                    Қидириш
+                </button>
+            </div>
+
+            <!-- БУЮРТМА БЕРИШ ФОРМАСИ -->
+            <div id="orderSection" class="w-full max-w-xl border border-sky-500/30 rounded-2xl p-5 shadow-2xl text-left">
+                <h2 class="text-sm font-black uppercase tracking-wider text-sky-400 mb-3 flex items-center gap-2">
+                    <i class="fas fa-couch"></i> Мебель таъмирлашга буюртма бериш
+                </h2>
+                <form id="orderForm" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <input type="text" id="clientName" required placeholder="Исм-шарифингиз" class="bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-100 outline-none focus:border-sky-500">
+                    <input type="tel" id="clientPhone" required placeholder="Телефон рақамингиз (+998...)" class="bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-100 outline-none focus:border-sky-500">
+                    <input type="text" id="clientNote" placeholder="Қайси мебелни таъмирлаш керак? (Диван, стол, шкаф...)" class="sm:col-span-2 bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-100 outline-none focus:border-sky-500">
+                    <button type="submit" class="sm:col-span-2 py-3 bg-gradient-to-r from-sky-600 to-blue-700 hover:from-sky-500 hover:to-blue-600 text-white text-xs font-black uppercase tracking-wider rounded-xl shadow-lg transition flex items-center justify-center gap-2">
+                        <i class="fas fa-paper-plane"></i> Буюртма қолдириш
+                    </button>
+                </form>
+                <p id="orderMsg" class="hidden text-xs font-bold text-emerald-400 mt-2.5">
+                    ✅ Буюртмангиз сақланди! Админ панелдаги «Келган буюртмалар» бўлимида кўринади.
+                </p>
+            </div>
+        </div>
+
+        <!-- ЎНГ ТОМОН: ЧИЗИҚ БЎЙЛАБ ЭГИЛГАН ДУМАЛОҚ МЕНЮ -->
+        <div class="lg:col-span-5 relative flex justify-center lg:justify-end pr-0 lg:pr-4">
+            <svg class="hidden sm:block absolute right-[12px] top-4 h-[420px] w-48 pointer-events-none stroke-slate-700/60" viewBox="0 0 200 420" fill="none">
+                <path d="M 185 15 Q 55 210 185 405" stroke-width="3" stroke-dasharray="6 4" />
+            </svg>
+
+            <div class="relative z-10 flex flex-wrap sm:flex-col justify-center gap-3 sm:space-y-3 w-full sm:w-auto items-end">
+                <div class="flex items-center justify-end space-x-3 sm:-translate-x-2">
+                    <button type="button" class="menu-btn biocyte-circle w-20 h-20 rounded-full flex flex-col items-center justify-center p-1 text-center" onclick="resetSearch(this)">
+                        <i class="fas fa-th-large text-base mb-1"></i>
+                        <span class="text-[9px] font-black tracking-wider uppercase leading-tight">Ҳаммаси</span>
+                    </button>
+                    <div class="node-circle hidden sm:block"></div>
+                </div>
+
+                <div class="flex items-center justify-end space-x-3 sm:-translate-x-10">
+                    <a href="gallery.html" class="menu-btn biocyte-circle w-20 h-20 rounded-full flex flex-col items-center justify-center p-1 text-center notranslate" title="Галерея ва карусель">
+                        <i class="fas fa-camera text-base mb-1"></i>
+                        <span class="text-[9px] font-black tracking-wider uppercase leading-tight">Галерея</span>
+                    </a>
+                    <div class="node-circle hidden sm:block"></div>
+                </div>
+
+                <div class="flex items-center justify-end space-x-3 sm:-translate-x-14">
+                    <a href="post.html" class="menu-btn biocyte-circle w-20 h-20 rounded-full flex flex-col items-center justify-center p-1 text-center notranslate" title="Мақолалар">
+                        <i class="fas fa-newspaper text-base mb-1"></i>
+                        <span class="text-[8.5px] font-black tracking-tight uppercase leading-tight">Мақолалар</span>
+                    </a>
+                    <div class="node-circle hidden sm:block"></div>
+                </div>
+
+                <div class="flex items-center justify-end space-x-3 sm:-translate-x-10">
+                    <a href="#orderSection" class="menu-btn biocyte-circle w-20 h-20 rounded-full flex flex-col items-center justify-center p-1 text-center" title="Буюртма бериш">
+                        <i class="fas fa-tools text-base mb-1"></i>
+                        <span class="text-[8.5px] font-black tracking-tight uppercase leading-tight">Буюртма</span>
+                    </a>
+                    <div class="node-circle hidden sm:block"></div>
+                </div>
+
+                <div class="flex items-center justify-end space-x-3 sm:-translate-x-2">
+                    <a href="admin.html" class="menu-btn biocyte-circle w-20 h-20 rounded-full flex flex-col items-center justify-center p-1 text-center notranslate" title="Админ панел">
+                        <i class="fas fa-user-shield text-base mb-1"></i>
+                        <span class="text-[9px] font-black tracking-wider uppercase leading-tight">Админ</span>
+                    </a>
+                    <div class="node-circle hidden sm:block"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</header>
+
+<!-- АДМИНДАН ТУШАДИГАН МАҚОЛА ВА МАЪЛУМОТЛАР СЕТКАСИ -->
+<main class="flex-1 max-w-7xl w-full mx-auto px-4 py-8">
+    <div class="flex items-center justify-between mb-6 pb-3 border-b border-slate-800">
+        <h2 class="text-xl font-black uppercase tracking-wider text-slate-100">
+            <i class="fas fa-newspaper text-sky-400 mr-2"></i> Асосий саҳифа маълумотлари
+        </h2>
+        <a href="post.html" class="text-xs font-bold text-sky-400 hover:underline">
+            Барча мақолалар <i class="fas fa-arrow-right ml-1"></i>
+        </a>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="newsWrapper">
+        <div class="col-span-full text-center text-slate-500 py-12">Юкланмоқда...</div>
+    </div>
+</main>
+
+<!-- ПАСТКИ ҚИСМ (ФУТЕР) -->
+<footer class="border-t border-slate-800/90 bg-slate-950/90 backdrop-blur-md mt-8">
+    <div class="max-w-7xl mx-auto px-4 py-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+        <div>
+            <strong class="text-slate-200 uppercase">POP MEBEL TA'MIRLASH</strong> • Поп тумани, Наманган вилояти
+        </div>
+        <div class="flex flex-wrap items-center gap-4">
+            <a href="gallery.html" class="hover:text-sky-400 transition">Галерея</a>
+            <a href="post.html" class="hover:text-sky-400 transition">Мақолалар</a>
+            <a href="admin.html" class="hover:text-sky-400 transition">Админ панел</a>
+        </div>
+    </div>
+</footer>
+
+<script type="text/javascript">
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({
+            pageLanguage: 'uz',
+            includedLanguages: 'uz,ru,en',
+            autoDisplay: false
+        }, 'google_translate_element');
+
+        const savedLang = localStorage.getItem("app_lang") || "uz";
+        updateLangButtons(savedLang);
+    }
+
+    function setLanguage(lang) {
+        localStorage.setItem("app_lang", lang);
+        document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; domain=" + window.location.hostname + "; path=/;";
+        if (lang !== 'uz') {
+            document.cookie = "googtrans=/uz/" + lang + "; path=/;";
+            document.cookie = "googtrans=/uz/" + lang + "; domain=" + window.location.hostname + "; path=/;";
+        }
+        location.reload();
+    }
+
+    function updateLangButtons(lang) {
+        document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('!bg-sky-600', '!border-sky-500', '!text-white'));
+        const activeBtn = document.getElementById(`lang-${lang}`);
+        if (activeBtn) activeBtn.classList.add('!bg-sky-600', '!border-sky-500', '!text-white');
+    }
+</script>
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+<script>
+    const POSTS_KEY = "pop_mebel_local_posts";
+    const ORDERS_KEY = "pop_mebel_local_orders";
+    const VISITS_KEY = "pop_mebel_local_visits";
+    const COUNTRIES_KEY = "pop_mebel_local_countries";
+    const SESSION_VISIT_KEY = "pop_mebel_session_counted";
+
+    function escapeHtml(str) {
+        return String(str || "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;");
+    }
+
+    // 1. АНИҚ СОАТ ВА САНА
+    function updateClock() {
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString("uz-UZ", { hour12: false });
+        const dateStr = now.toLocaleDateString("uz-UZ", { year: "numeric", month: "long", day: "numeric" });
+        document.getElementById("liveClock").textContent = timeStr;
+        document.getElementById("liveDate").textContent = dateStr;
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    // 2. КИРУВЧИЛАР СОНИ ВА ДАВЛАТ ИНДИКАТОРИ (БИР СЕССИЯДА БИР МАРТА САНАЙДИ)
+    function renderVisitorStats() {
+        const visits = Number(localStorage.getItem(VISITS_KEY) || 0);
+        const countries = JSON.parse(localStorage.getItem(COUNTRIES_KEY) || "{}");
+        document.getElementById("totalVisitsCount").textContent = visits;
+
+        const badges = document.getElementById("countryBadges");
+        badges.innerHTML = "";
+        Object.keys(countries).forEach(c => {
+            badges.innerHTML += `
+                <span class="px-2.5 py-1 rounded-full bg-slate-950 border border-slate-800 text-slate-300 font-semibold">
+                    <i class="fas fa-map-marker-alt text-rose-400 mr-1"></i>${escapeHtml(c)}: <strong class="text-sky-400">${Number(countries[c] || 0)}</strong>
+                </span>
+            `;
+        });
+    }
+
+    async function trackVisitorLocal() {
+        let countryName = "O'zbekiston (Локал)";
+        try {
+            const res = await fetch("https://ipapi.co/json/");
+            if (res.ok) {
+                const geo = await res.json();
+                if (geo && geo.country_name) countryName = geo.country_name;
+            }
+        } catch (_) {}
+
+        document.getElementById("currentVisitorCountry").textContent = countryName;
+
+        if (!sessionStorage.getItem(SESSION_VISIT_KEY)) {
+            sessionStorage.setItem(SESSION_VISIT_KEY, "1");
+            const nextVisits = Number(localStorage.getItem(VISITS_KEY) || 0) + 1;
+            localStorage.setItem(VISITS_KEY, String(nextVisits));
+
+            const countries = JSON.parse(localStorage.getItem(COUNTRIES_KEY) || "{}");
+            countries[countryName] = (countries[countryName] || 0) + 1;
+            localStorage.setItem(COUNTRIES_KEY, JSON.stringify(countries));
+        }
+
+        renderVisitorStats();
+    }
+    trackVisitorLocal();
+
+    // 3. ХИЗМАТ ТАНЛАШ ВА БУЮРТМА ҚОЛДИРИШ
+    window.selectService = (serviceText) => {
+        const noteInput = document.getElementById("clientNote");
+        if (noteInput) {
+            noteInput.value = serviceText;
+            noteInput.focus();
+        }
+    };
+
+    document.getElementById("orderForm").onsubmit = (e) => {
+        e.preventDefault();
+        const name = document.getElementById("clientName").value.trim();
+        const phone = document.getElementById("clientPhone").value.trim();
+        const note = document.getElementById("clientNote").value.trim() || "Мебель таъмирлаш бўйича мурожаат";
+        if (!name || !phone) return;
+
+        const orders = JSON.parse(localStorage.getItem(ORDERS_KEY) || "[]");
+        orders.unshift({
+            id: Date.now(),
+            name,
+            phone,
+            note,
+            date: new Date().toLocaleDateString("uz-UZ")
+        });
+        localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
+
+        document.getElementById("orderForm").reset();
+        const msg = document.getElementById("orderMsg");
+        msg.classList.remove("hidden");
+        setTimeout(() => msg.classList.add("hidden"), 4000);
+    };
+
+    // 4. АДМИНДАН КЕЛГАН МАЪЛУМОТЛАРНИ ЧИҚАРИШ
+    let currentSearch = "";
+
+    window.searchPosts = () => {
+        currentSearch = (document.getElementById("searchInput")?.value || "").toLowerCase().trim();
+        renderMainPosts();
+    };
+
+    window.resetSearch = (btn) => {
+        document.querySelectorAll(".menu-btn").forEach(b => b.classList.remove("active"));
+        if (btn) btn.classList.add("active");
+        const input = document.getElementById("searchInput");
+        if (input) input.value = "";
+        currentSearch = "";
+        renderMainPosts();
+    };
+
+    function renderMainPosts() {
+        let posts = [];
+        try {
+            posts = JSON.parse(localStorage.getItem(POSTS_KEY)) || [];
+        } catch {
+            posts = [];
+        }
+
+        const wrapper = document.getElementById("newsWrapper");
+        wrapper.innerHTML = "";
+
+        const filtered = posts.filter(p =>
+            !currentSearch ||
+            (p.title || "").toLowerCase().includes(currentSearch) ||
+            (p.text || "").toLowerCase().includes(currentSearch)
+        );
+
+        if (!filtered.length) {
+            wrapper.innerHTML = `<p class="col-span-full text-center text-slate-400 py-12">Ҳозирча маълумот йўқ. <a href="admin.html" class="text-sky-400 underline">Админ панел</a>дан мақола қўшинг.</p>`;
+            return;
+        }
+
+        filtered.forEach(p => {
+            const safeTitle = escapeHtml(p.title || "");
+            const safeText = escapeHtml(p.text || "");
+            const safeDate = escapeHtml(p.date || "");
+            const imgHtml = p.image
+                ? `<img src="${escapeHtml(p.image)}" alt="${safeTitle}" class="w-full h-48 object-cover bg-slate-800">`
+                : "";
+
+            wrapper.innerHTML += `
+                <article class="bg-slate-900/90 border border-slate-800 rounded-2xl overflow-hidden shadow-xl hover:border-sky-500/50 transition flex flex-col justify-between">
+                    <div>
+                        ${imgHtml}
+                        <div class="p-5">
+                            <span class="inline-block text-[10px] font-extrabold uppercase bg-sky-600/20 text-sky-400 border border-sky-500/30 px-2.5 py-1 rounded-md mb-3">Маълумот</span>
+                            <h3 class="text-base sm:text-lg font-bold text-slate-100 mb-2">${safeTitle}</h3>
+                            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed line-clamp-4 whitespace-pre-line">${safeText}</p>
+                        </div>
+                    </div>
+                    <div class="px-5 pb-4 pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
+                        <span><i class="far fa-calendar-alt text-sky-400 mr-1"></i>${safeDate}</span>
+                        <a href="post.html" class="text-sky-400 hover:underline font-bold">Батафсил</a>
+                    </div>
+                </article>
+            `;
+        });
+    }
+
+    renderMainPosts();
+</script>
+</body>
+</html>

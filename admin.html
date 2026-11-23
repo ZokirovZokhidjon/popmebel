@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Pop Mebel Ta'mirlash</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .wood-gradient {
+            background: linear-gradient(135deg, #3e2723 0%, #5d4037 100%);
+        }
+        .staff-gradient {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+        }
+        .custom-scroll::-webkit-scrollbar { width: 6px; }
+        .custom-scroll::-webkit-scrollbar-track { background: #f5f5f4; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #a8a29e; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-stone-100 text-stone-800 font-sans min-h-screen">
+
+<!-- 1. ИККИГА БЎЛИНГАН КИРИШ ҚИСМИ (РАҚАМЛАР ЯШИРИЛГАН) -->
+<div id="login-section" class="fixed inset-0 z-50 flex items-center justify-center bg-stone-900/90 backdrop-blur-sm px-4 py-6 overflow-y-auto">
+    <div class="w-full max-w-4xl bg-white border border-stone-200 rounded-3xl p-6 sm:p-8 shadow-2xl my-auto">
+
+        <div class="text-center mb-6">
+            <div class="w-16 h-16 mx-auto mb-3 rounded-2xl wood-gradient flex items-center justify-center text-amber-100 text-2xl shadow-lg">
+                <i class="fas fa-couch"></i>
+            </div>
+            <h2 class="text-2xl font-black text-stone-800 uppercase tracking-wide">Pop Mebel Admin</h2>
+            <p class="text-xs text-stone-500 mt-1">Локал режим (Firebase'сиз) • Телефон рақамлар яширилган</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            <!-- ДИВ 1: РАҲБАР УЧУН КИРИШ БЛОКИ -->
+            <div class="bg-amber-50/60 border-2 border-amber-900/20 hover:border-amber-800/50 rounded-2xl p-6 transition flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center gap-3 mb-4 pb-3 border-b border-amber-900/15">
+                        <div class="w-11 h-11 rounded-xl wood-gradient text-amber-100 flex items-center justify-center text-lg shadow">
+                            <i class="fas fa-user-tie"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-base font-black text-amber-950 uppercase">Раҳбар кириши</h3>
+                            <p class="text-[11px] text-stone-600">Тўлиқ бошқарув ва ҳисоб-китоб</p>
+                        </div>
+                    </div>
+
+                    <form id="directorLoginForm" class="space-y-4 text-left">
+                        <div>
+                            <label class="block text-[11px] font-bold text-stone-700 mb-1 uppercase">Раҳбар телефон рақами</label>
+                            <div class="relative flex items-center">
+                                <i class="fas fa-phone absolute left-3.5 text-stone-400 text-xs"></i>
+                                <input type="password" id="dirPhone" required autocomplete="off" placeholder="•••••••••••••" class="w-full bg-white border border-stone-300 rounded-xl py-2.5 pl-10 pr-10 text-sm font-bold text-stone-800 outline-none focus:border-amber-800">
+                                <button type="button" onclick="toggleVisibility('dirPhone', this)" class="absolute right-3 text-stone-400 hover:text-stone-700 text-xs p-1" title="Кўрсатиш / Яшириш">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <p id="dirError" class="hidden text-[11px] text-red-600 font-bold bg-red-50 border border-red-200 px-3 py-2 rounded-lg"></p>
+
+                        <button type="submit" class="w-full py-3 wood-gradient hover:opacity-95 text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow transition flex items-center justify-center gap-2">
+                            <i class="fas fa-shield-alt"></i> Раҳбар сифатида кириш
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- ДИВ 2: ХОДИМ / ОПЕРАТОР УЧУН КИРИШ БЛОКИ -->
+            <div class="bg-slate-50 border-2 border-slate-300/70 hover:border-slate-500/50 rounded-2xl p-6 transition flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center gap-3 mb-4 pb-3 border-b border-slate-200">
+                        <div class="w-11 h-11 rounded-xl staff-gradient text-white flex items-center justify-center text-lg shadow">
+                            <i class="fas fa-user-cog"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-base font-black text-slate-800 uppercase">Ходим кириши</h3>
+                            <p class="text-[11px] text-slate-500">Галерея, мақола ва буюртмалар</p>
+                        </div>
+                    </div>
+
+                    <form id="staffLoginForm" class="space-y-4 text-left">
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-600 mb-1 uppercase">Ходим телефон рақами</label>
+                            <div class="relative flex items-center">
+                                <i class="fas fa-phone absolute left-3.5 text-slate-400 text-xs"></i>
+                                <input type="password" id="staffPhone" required autocomplete="off" placeholder="•••••••••••••" class="w-full bg-white border border-slate-300 rounded-xl py-2.5 pl-10 pr-10 text-sm font-bold text-slate-800 outline-none focus:border-slate-600">
+                                <button type="button" onclick="toggleVisibility('staffPhone', this)" class="absolute right-3 text-slate-400 hover:text-slate-700 text-xs p-1" title="Кўрсатиш / Яшириш">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <p id="staffError" class="hidden text-[11px] text-red-600 font-bold bg-red-50 border border-red-200 px-3 py-2 rounded-lg"></p>
+
+                        <button type="submit" class="w-full py-3 staff-gradient hover:opacity-95 text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow transition flex items-center justify-center gap-2">
+                            <i class="fas fa-sign-in-alt"></i> Ходим сифатида кириш
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="mt-6 pt-4 border-t border-stone-200 text-center">
+            <a href="index.html" class="text-xs font-semibold text-stone-500 hover:text-amber-800">
+                <i class="fas fa-arrow-left mr-1"></i> Асосий саҳифага қайтиш
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- 2. АСОСИЙ БОШҚАРУВ ПАНЕЛИ -->
+<div id="admin-content" class="hidden max-w-7xl mx-auto px-4 py-6">
+
+    <!-- HEADER -->
+    <div class="bg-white border border-stone-200 rounded-2xl p-5 mb-6 flex flex-col sm:flex-row justify-between items-center gap-4 shadow-sm">
+        <div>
+            <div class="flex items-center gap-2">
+                <h1 class="text-xl sm:text-2xl font-black text-stone-800 uppercase">Pop Mebel Ta'mirlash</h1>
+                <span id="roleBadge" class="px-3 py-1 text-[11px] font-bold rounded-full uppercase"></span>
+            </div>
+            <p id="welcomeText" class="text-xs text-stone-500 mt-1"></p>
+        </div>
+        <div class="flex flex-wrap gap-2">
+            <a href="index.html" target="_blank" class="px-3.5 py-2 bg-stone-100 hover:bg-stone-200 text-stone-700 text-xs font-bold rounded-xl transition">
+                <i class="fas fa-home mr-1"></i> Асосий саҳифа
+            </a>
+            <a href="gallery.html" target="_blank" class="px-3.5 py-2 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 text-xs font-bold rounded-xl transition">
+                <i class="fas fa-images mr-1"></i> Галерея
+            </a>
+            <a href="post.html" target="_blank" class="px-3.5 py-2 bg-stone-100 hover:bg-stone-200 text-stone-700 text-xs font-bold rounded-xl transition">
+                <i class="fas fa-newspaper mr-1"></i> Мақолалар
+            </a>
+            <button id="logoutBtn" class="px-3.5 py-2 bg-red-50 hover:bg-red-600 text-red-600 hover:text-white text-xs font-bold rounded-xl transition">
+                <i class="fas fa-sign-out-alt mr-1"></i> Чиқиш
+            </button>
+        </div>
+    </div>
+
+    <!-- РАҲБАР УЧУН МОЛИЯВИЙ ҲИСОБ-КИТОБ БЎЛИМИ -->
+    <div id="directorAccountingSection" class="hidden mb-8">
+        <div class="bg-white border-2 border-amber-700/30 rounded-2xl p-6 shadow-md">
+            <h2 class="text-base font-black text-amber-900 uppercase tracking-wider mb-4 flex items-center gap-2">
+                <i class="fas fa-calculator"></i> Раҳбар ҳисоб-китоби (Кирим ва Чиқим)
+            </h2>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+                    <p class="text-xs text-emerald-700 font-bold uppercase">Жами Кирим (Тушум)</p>
+                    <h3 id="totalIncome" class="text-2xl font-black text-emerald-900 mt-1">0 сўм</h3>
+                </div>
+                <div class="bg-rose-50 border border-rose-200 rounded-xl p-4">
+                    <p class="text-xs text-rose-700 font-bold uppercase">Жами Чиқим (Харажат)</p>
+                    <h3 id="totalExpense" class="text-2xl font-black text-rose-900 mt-1">0 сўм</h3>
+                </div>
+                <div class="bg-amber-50 border border-amber-300 rounded-xl p-4">
+                    <p class="text-xs text-amber-800 font-bold uppercase">Соф Фойда (Қолдиқ)</p>
+                    <h3 id="netProfit" class="text-2xl font-black text-amber-950 mt-1">0 сўм</h3>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-3 mb-4">
+                <select id="accType" class="bg-stone-50 border border-stone-300 rounded-xl p-2.5 text-xs font-bold outline-none">
+                    <option value="income">➕ Кирим (Буюртма пули)</option>
+                    <option value="expense">➖ Чиқим (Материал/Уста)</option>
+                </select>
+                <input type="text" id="accDesc" placeholder="Изоҳ (Масалан: Диван таъмири, МДФ, Елим)" class="md:col-span-2 bg-stone-50 border border-stone-300 rounded-xl p-2.5 text-xs outline-none">
+                <input type="number" id="accAmount" placeholder="Сумма (сўмда)" class="bg-stone-50 border border-stone-300 rounded-xl p-2.5 text-xs font-bold outline-none">
+                <button id="addAccBtn" class="wood-gradient text-white font-bold text-xs uppercase rounded-xl py-2.5 px-4 hover:opacity-90 transition">
+                    Қўшиш
+                </button>
+            </div>
+
+            <div id="accountingList" class="custom-scroll max-h-52 overflow-y-auto space-y-2 border-t border-stone-200 pt-3"></div>
+        </div>
+    </div>
+
+    <!-- АСОСИЙ ИШ БЎЛИМЛАРИ -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+        <!-- ЧАП ТОМОН: ГАЛЕРЕЯ ВА МАҚОЛА ЮКЛАШ -->
+        <div class="lg:col-span-7 space-y-6">
+
+            <!-- 1. ГАЛЕРЕЯГА РАСМ ЮКЛАШ -->
+            <div class="bg-white border border-stone-200 rounded-2xl p-6 shadow-sm">
+                <h3 class="text-base font-black text-stone-800 uppercase mb-4 pb-2 border-b border-stone-100 flex items-center gap-2">
+                    <i class="fas fa-camera text-amber-700"></i> Галереяга расм юклаш (gallery.html)
+                </h3>
+                <div class="space-y-3">
+                    <div class="border-2 border-dashed border-stone-300 rounded-xl p-4 text-center bg-stone-50">
+                        <input type="file" id="galFile" accept="image/*" class="text-xs text-stone-600 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-amber-800 file:text-white file:font-bold cursor-pointer">
+                        <p id="galStatus" class="hidden text-xs font-bold text-emerald-700 mt-2"></p>
+                        <img id="galPreview" class="hidden max-h-40 mx-auto mt-3 rounded-lg shadow" alt="Превью" />
+                    </div>
+                    <input type="text" id="galImgUrl" placeholder="Ёки расм ҳаволаси (файл танланса автоматик тўлади)" class="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 text-xs outline-none">
+                    <input type="text" id="galTitle" placeholder="Иш номи (Масалан: Юмшоқ диван перетяжкаси)" class="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 text-xs outline-none">
+                    <button id="saveGalBtn" class="w-full py-3 wood-gradient text-white font-bold text-xs uppercase rounded-xl shadow hover:opacity-95 transition">
+                        <i class="fas fa-plus-circle mr-1"></i> Галереяга қўшиш
+                    </button>
+                </div>
+            </div>
+
+            <!-- 2. АСОСИЙ САҲИФАГА МАҚОЛА / ХАБАР ЮКЛАШ -->
+            <div class="bg-white border border-stone-200 rounded-2xl p-6 shadow-sm">
+                <h3 class="text-base font-black text-stone-800 uppercase mb-4 pb-2 border-b border-stone-100 flex items-center gap-2">
+                    <i class="fas fa-newspaper text-amber-700"></i> Асосий саҳифага хабар / мақола қўшиш
+                </h3>
+                <div class="space-y-3">
+                    <input type="text" id="postTitle" placeholder="Мақола ёки янгилик сарлавҳаси" class="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 text-xs outline-none">
+                    <div class="border-2 border-dashed border-stone-300 rounded-xl p-3 text-center bg-stone-50">
+                        <label class="block text-xs font-bold text-stone-600 mb-1">Мақола учун расм (ихтиёрий)</label>
+                        <input type="file" id="postFile" accept="image/*" class="text-xs text-stone-600">
+                    </div>
+                    <input type="hidden" id="postImgUrl">
+                    <textarea id="postText" rows="4" placeholder="Мақола матни..." class="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 text-xs outline-none"></textarea>
+                    <button id="pubPostBtn" class="w-full py-3 bg-stone-800 hover:bg-stone-900 text-white font-bold text-xs uppercase rounded-xl shadow transition">
+                        <i class="fas fa-paper-plane mr-1"></i> Асосий саҳифага чиқариш
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ЎНГ ТОМОН: БУЮРТМАЛАР ВА ЮКЛАНГАНЛАР РЎЙХАТИ -->
+        <div class="lg:col-span-5 space-y-6">
+
+            <!-- БУЮРТМАЛАР РЎЙХАТИ -->
+            <div class="bg-white border border-stone-200 rounded-2xl p-6 shadow-sm flex flex-col h-[380px]">
+                <div class="flex justify-between items-center mb-3 pb-2 border-b border-stone-100">
+                    <h3 class="text-base font-black text-stone-800 uppercase flex items-center gap-2">
+                        <i class="fas fa-bell text-amber-600"></i> Келган буюртмалар
+                    </h3>
+                    <span id="orderCount" class="px-2.5 py-0.5 bg-amber-100 text-amber-900 text-xs font-bold rounded-full">0</span>
+                </div>
+                <div id="ordersList" class="custom-scroll flex-1 overflow-y-auto space-y-3 pr-1"></div>
+            </div>
+
+            <!-- ГАЛЕРЕЯ ВА МАҚОЛАЛАРНИ БОШҚАРИШ -->
+            <div class="bg-white border border-stone-200 rounded-2xl p-6 shadow-sm flex flex-col h-[380px]">
+                <h3 class="text-base font-black text-stone-800 uppercase mb-3 pb-2 border-b border-stone-100 flex items-center gap-2">
+                    <i class="fas fa-layer-group text-stone-600"></i> Юкланган расм ва мақолалар
+                </h3>
+                <div id="contentList" class="custom-scroll flex-1 overflow-y-auto space-y-2 pr-1"></div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    const DIRECTOR_PHONES = {
+        "+998901234567": "Раҳбар (Устахона эгаси)"
+    };
+
+    const STAFF_PHONES = {
+        "+998911234567": "Ходим / Оператор"
+    };
+
+    const STORAGE_KEYS = {
+        session: "pop_mebel_local_session",
+        gallery: "pop_mebel_local_gallery",
+        posts: "pop_mebel_local_posts",
+        orders: "pop_mebel_local_orders",
+        accounting: "pop_mebel_local_accounting"
+    };
+
+    function getData(key) {
+        try {
+            return JSON.parse(localStorage.getItem(key)) || [];
+        } catch {
+            return [];
+        }
+    }
+
+    function setData(key, val) {
+        try {
+            localStorage.setItem(key, JSON.stringify(val));
+            return true;
+        } catch (err) {
+            alert("⚠️ Хотира (localStorage) тўлиб қолган ёки расм ҳажми катта. Кичикроқ расм танланг ёки эски расмлардан ўчиринг.");
+            return false;
+        }
+    }
+
+    function normalizePhone(phone) {
+        let cleaned = phone.replace(/[\s\-\(\)]/g, '');
+        if (!cleaned.startsWith('+')) cleaned = '+' + cleaned;
+        return cleaned;
+    }
+
+    window.toggleVisibility = (inputId, btn) => {
+        const input = document.getElementById(inputId);
+        const icon = btn.querySelector('i');
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            input.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    };
+
+    document.getElementById('directorLoginForm').onsubmit = (e) => {
+        e.preventDefault();
+        const phone = normalizePhone(document.getElementById('dirPhone').value);
+        const err = document.getElementById('dirError');
+
+        if (!DIRECTOR_PHONES[phone]) {
+            err.innerText = "⛔ Бу телефон рақам раҳбарлар рўйхатида мавжуд эмас!";
+            err.classList.remove('hidden');
+            return;
+        }
+        err.classList.add('hidden');
+        localStorage.setItem(STORAGE_KEYS.session, JSON.stringify({
+            phone, role: 'director', name: DIRECTOR_PHONES[phone]
+        }));
+        initDashboard();
+    };
+
+    document.getElementById('staffLoginForm').onsubmit = (e) => {
+        e.preventDefault();
+        const phone = normalizePhone(document.getElementById('staffPhone').value);
+        const err = document.getElementById('staffError');
+
+        if (!STAFF_PHONES[phone]) {
+            err.innerText = "⛔ Бу телефон рақам ходимлар рўйхатида мавжуд эмас!";
+            err.classList.remove('hidden');
+            return;
+        }
+        err.classList.add('hidden');
+        localStorage.setItem(STORAGE_KEYS.session, JSON.stringify({
+            phone, role: 'staff', name: STAFF_PHONES[phone]
+        }));
+        initDashboard();
+    };
+
+    document.getElementById('logoutBtn').onclick = () => {
+        localStorage.removeItem(STORAGE_KEYS.session);
+        location.reload();
+    };
+
+    function initDashboard() {
+        const saved = localStorage.getItem(STORAGE_KEYS.session);
+        if (!saved) return;
+
+        const user = JSON.parse(saved);
+        document.getElementById('login-section').classList.add('hidden');
+        document.getElementById('admin-content').classList.remove('hidden');
+
+        const roleBadge = document.getElementById('roleBadge');
+        document.getElementById('welcomeText').innerText = `Хуш келибсиз, ${user.name} (Локал режим)`;
+
+        if (user.role === 'director') {
+            roleBadge.innerText = "Раҳбар";
+            roleBadge.className = "px-3 py-1 text-[11px] font-bold rounded-full uppercase bg-amber-900 text-white";
+            document.getElementById('directorAccountingSection').classList.remove('hidden');
+            renderAccounting();
+        } else {
+            roleBadge.innerText = "Ходим";
+            roleBadge.className = "px-3 py-1 text-[11px] font-bold rounded-full uppercase bg-slate-700 text-white";
+            document.getElementById('directorAccountingSection').classList.add('hidden');
+        }
+
+        renderOrders();
+        renderContent();
+    }
+
+    function compressImage(file, maxWidth, quality, callback) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                let w = img.width, h = img.height;
+                if (w > maxWidth) { h *= maxWidth / w; w = maxWidth; }
+                canvas.width = w; canvas.height = h;
+                canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+                callback(canvas.toDataURL('image/jpeg', quality));
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+
+    document.getElementById('galFile').onchange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const status = document.getElementById('galStatus');
+        status.innerText = "⏳ Расм тайёрланмоқда...";
+        status.classList.remove('hidden');
+
+        compressImage(file, 800, 0.7, (base64) => {
+            document.getElementById('galImgUrl').value = base64;
+            const prev = document.getElementById('galPreview');
+            prev.src = base64;
+            prev.classList.remove('hidden');
+            status.innerText = "✅ Расм тайёр!";
+        });
+    };
+
+    document.getElementById('saveGalBtn').onclick = () => {
+        const image = document.getElementById('galImgUrl').value.trim();
+        const title = document.getElementById('galTitle').value.trim() || "Таъмирланган мебел";
+        if (!image) return alert("Илтимос, расм танланг ёки ҳавола киритинг!");
+
+        const list = getData(STORAGE_KEYS.gallery);
+        list.unshift({
+            id: Date.now(),
+            image,
+            title,
+            date: new Date().toLocaleDateString('uz-UZ')
+        });
+
+        if (!setData(STORAGE_KEYS.gallery, list)) return;
+
+        document.getElementById('galImgUrl').value = "";
+        document.getElementById('galTitle').value = "";
+        document.getElementById('galFile').value = "";
+        document.getElementById('galPreview').classList.add('hidden');
+        document.getElementById('galStatus').classList.add('hidden');
+        renderContent();
+        alert("✅ Расм галереяга қўшилди! gallery.html саҳифасида кўринади.");
+    };
+
+    document.getElementById('postFile').onchange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        compressImage(file, 700, 0.7, (base64) => {
+            document.getElementById('postImgUrl').value = base64;
+            alert("✅ Мақола расми тайёрланди!");
+        });
+    };
+
+    document.getElementById('pubPostBtn').onclick = () => {
+        const title = document.getElementById('postTitle').value.trim();
+        const text = document.getElementById('postText').value.trim();
+        const image = document.getElementById('postImgUrl').value.trim();
+        if (!title || !text) return alert("Сарлавҳа ва матнни киритинг!");
+
+        const list = getData(STORAGE_KEYS.posts);
+        list.unshift({
+            id: Date.now(),
+            title,
+            text,
+            image,
+            date: new Date().toLocaleDateString('uz-UZ')
+        });
+
+        if (!setData(STORAGE_KEYS.posts, list)) return;
+
+        document.getElementById('postTitle').value = "";
+        document.getElementById('postText').value = "";
+        document.getElementById('postImgUrl').value = "";
+        document.getElementById('postFile').value = "";
+        renderContent();
+        alert("✅ Хабар сақланди! Асосий саҳифа ва post.html да кўринади.");
+    };
+
+    function renderOrders() {
+        const orders = getData(STORAGE_KEYS.orders);
+        const list = document.getElementById('ordersList');
+        document.getElementById('orderCount').innerText = orders.length;
+        list.innerHTML = "";
+
+        if (!orders.length) {
+            list.innerHTML = "<p class='text-xs text-stone-400 text-center py-6'>Ҳозирча буюртмалар йўқ</p>";
+            return;
+        }
+
+        orders.forEach(o => {
+            list.innerHTML += `
+                <div class="p-3.5 bg-amber-50/70 border border-amber-200 rounded-xl flex justify-between items-start gap-2">
+                    <div>
+                        <p class="text-xs font-black text-stone-800">${o.name}</p>
+                        <a href="tel:${o.phone}" class="text-xs font-bold text-amber-800 hover:underline"><i class="fas fa-phone-alt mr-1"></i>${o.phone}</a>
+                        <p class="text-[11px] text-stone-600 mt-1">${o.note || "Мебель таъмирлаш бўйича мурожаат"}</p>
+                        <span class="text-[10px] text-stone-400">${o.date || ""}</span>
+                    </div>
+                    <button onclick="deleteLocalItem('${STORAGE_KEYS.orders}', ${o.id})" class="text-rose-500 hover:text-rose-700 text-xs p-1">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `;
+        });
+    }
+
+    function renderContent() {
+        const gallery = getData(STORAGE_KEYS.gallery);
+        const posts = getData(STORAGE_KEYS.posts);
+        const container = document.getElementById('contentList');
+        container.innerHTML = "";
+
+        gallery.forEach(item => {
+            container.innerHTML += `
+                <div class="p-2.5 bg-stone-50 border border-stone-200 rounded-xl flex items-center justify-between gap-2">
+                    <div class="flex items-center gap-2.5 truncate">
+                        <img src="${item.image}" class="w-10 h-10 rounded-lg object-cover flex-shrink-0" alt="">
+                        <div class="truncate">
+                            <span class="text-[10px] font-bold text-amber-700 uppercase">Галерея</span>
+                            <p class="text-xs font-bold text-stone-800 truncate">${item.title}</p>
+                        </div>
+                    </div>
+                    <button onclick="deleteLocalItem('${STORAGE_KEYS.gallery}', ${item.id})" class="text-rose-500 hover:text-rose-700 px-2"><i class="fas fa-trash text-xs"></i></button>
+                </div>
+            `;
+        });
+
+        posts.forEach(item => {
+            container.innerHTML += `
+                <div class="p-2.5 bg-stone-50 border border-stone-200 rounded-xl flex items-center justify-between gap-2">
+                    <div class="truncate">
+                        <span class="text-[10px] font-bold text-emerald-700 uppercase">Мақола</span>
+                        <p class="text-xs font-bold text-stone-800 truncate">${item.title}</p>
+                    </div>
+                    <button onclick="deleteLocalItem('${STORAGE_KEYS.posts}', ${item.id})" class="text-rose-500 hover:text-rose-700 px-2"><i class="fas fa-trash text-xs"></i></button>
+                </div>
+            `;
+        });
+    }
+
+    document.getElementById('addAccBtn').onclick = () => {
+        const type = document.getElementById('accType').value;
+        const desc = document.getElementById('accDesc').value.trim();
+        const amount = Number(document.getElementById('accAmount').value);
+        if (!desc || !amount) return alert("Изоҳ ва суммани киритинг!");
+
+        const rows = getData(STORAGE_KEYS.accounting);
+        rows.unshift({
+            id: Date.now(),
+            type,
+            desc,
+            amount,
+            date: new Date().toLocaleDateString('uz-UZ')
+        });
+        if (!setData(STORAGE_KEYS.accounting, rows)) return;
+
+        document.getElementById('accDesc').value = "";
+        document.getElementById('accAmount').value = "";
+        renderAccounting();
+    };
+
+    function renderAccounting() {
+        const rows = getData(STORAGE_KEYS.accounting);
+        const list = document.getElementById('accountingList');
+        list.innerHTML = "";
+        let income = 0, expense = 0;
+
+        rows.forEach(row => {
+            if (row.type === 'income') income += row.amount;
+            else expense += row.amount;
+
+            const isInc = row.type === 'income';
+            list.innerHTML += `
+                <div class="flex justify-between items-center p-2.5 rounded-lg border ${isInc ? 'bg-emerald-50/50 border-emerald-200' : 'bg-rose-50/50 border-rose-200'}">
+                    <div>
+                        <p class="text-xs font-bold text-stone-800">${row.desc}</p>
+                        <span class="text-[10px] text-stone-500">${row.date}</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="text-xs font-black ${isInc ? 'text-emerald-700' : 'text-rose-700'}">
+                            ${isInc ? '+' : '-'}${row.amount.toLocaleString()} сўм
+                        </span>
+                        <button onclick="deleteLocalItem('${STORAGE_KEYS.accounting}', ${row.id})" class="text-stone-400 hover:text-rose-600 text-xs"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+            `;
+        });
+
+        document.getElementById('totalIncome').innerText = income.toLocaleString() + " сўм";
+        document.getElementById('totalExpense').innerText = expense.toLocaleString() + " сўм";
+        document.getElementById('netProfit').innerText = (income - expense).toLocaleString() + " сўм";
+    }
+
+    window.deleteLocalItem = (storageKey, id) => {
+        if (!confirm("Ростдан ҳам ўчирмоқчимисиз?")) return;
+        const filtered = getData(storageKey).filter(x => x.id !== id);
+        setData(storageKey, filtered);
+        renderOrders();
+        renderContent();
+        renderAccounting();
+    };
+
+    initDashboard();
+</script>
+</body>
+</html>

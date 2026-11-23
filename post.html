@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мақола ва Хабарлар - Pop Mebel Ta'mirlash</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .metallic-text {
+            background: linear-gradient(180deg, #ffffff 0%, #94a3b8 50%, #475569 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .custom-scroll::-webkit-scrollbar { width: 6px; }
+        .custom-scroll::-webkit-scrollbar-track { background: #0f172a; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-black text-slate-100 font-sans min-h-screen flex flex-col">
+
+    <!-- ЮҚОРИ ПАНЕЛ -->
+    <header class="border-b border-slate-800 bg-slate-950/90 backdrop-blur-md sticky top-0 z-30">
+        <div class="max-w-7xl mx-auto px-4 py-3.5 flex flex-wrap justify-between items-center gap-3">
+            <a href="index.html" class="flex items-center gap-3">
+                <i class="fas fa-newspaper text-sky-400 text-2xl"></i>
+                <div>
+                    <h1 class="text-base sm:text-xl font-black metallic-text uppercase leading-tight">POP MEBEL TA'MIRLASH</h1>
+                    <p class="text-[11px] text-slate-400">Мақолалар, маслаҳатлар ва янгиликлар</p>
+                </div>
+            </a>
+            <div class="flex items-center gap-2">
+                <a href="index.html" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-xs font-bold rounded-xl transition">
+                    <i class="fas fa-home mr-1"></i> Асосий
+                </a>
+                <a href="gallery.html" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-sky-400 text-xs font-bold rounded-xl transition">
+                    <i class="fas fa-images mr-1"></i> Галерея
+                </a>
+                <a href="admin.html" class="px-3 py-2 bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold rounded-xl transition">
+                    <i class="fas fa-user-shield mr-1"></i> Админ
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-6 sm:py-8">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 pb-3 border-b border-slate-800">
+            <h2 class="text-lg sm:text-xl font-black uppercase tracking-wider text-sky-400 flex items-center gap-2">
+                <i class="fas fa-book-open"></i> Мақолалар маркази
+            </h2>
+            <input type="text" id="searchPostInput" oninput="filterPosts()" placeholder="Мақолалардан қидириш..."
+                   class="bg-slate-900 border border-slate-800 focus:border-sky-500 rounded-xl px-4 py-2 text-xs text-slate-200 outline-none w-full sm:w-72">
+        </div>
+
+        <!-- БЎШ ҲОЛАТ -->
+        <div id="emptyState" class="hidden bg-slate-900 border border-slate-800 rounded-2xl p-10 text-center text-slate-400">
+            <p class="mb-3 text-sm">Ҳозирча мақолалар топилмади.</p>
+            <a href="admin.html" class="inline-block px-4 py-2 bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold rounded-xl transition">
+                Админ орқали мақола қўшиш
+            </a>
+        </div>
+
+        <!-- ИККИ УСТУНЛИ АСОСИЙ БЛОК: ЧАПДА ЎҚИШ, ЎНГДА РЎЙХАТ -->
+        <div id="readerLayout" class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+            <!-- ЧАП ТОМОН (8 УСТУН): ТАНЛАНГАН МАҚОЛАНИ ЎҚИШ -->
+            <section id="readerSection" class="lg:col-span-8 bg-slate-900/95 border border-slate-800 rounded-2xl p-5 sm:p-7 shadow-2xl">
+                <div class="flex flex-wrap items-center justify-between gap-2 text-xs text-slate-400 mb-4 pb-3 border-b border-slate-800">
+                    <span class="px-2.5 py-1 rounded-md bg-sky-600/20 text-sky-400 border border-sky-500/30 font-bold uppercase text-[10px]">
+                        Танланган мақола
+                    </span>
+                    <div class="flex items-center gap-3">
+                        <span id="activePostCounter" class="text-slate-400 font-semibold">1 / 1</span>
+                        <span><i class="far fa-calendar-alt text-sky-400 mr-1"></i><strong id="activePostDate" class="text-slate-300"></strong></span>
+                    </div>
+                </div>
+
+                <h3 id="activePostTitle" class="text-xl sm:text-2xl font-black text-white mb-4 leading-snug"></h3>
+
+                <div id="activePostImageWrap" class="hidden mb-5">
+                    <img id="activePostImage" src="" alt="" class="w-full max-h-[420px] object-cover rounded-xl bg-slate-950 border border-slate-800">
+                </div>
+
+                <div id="activePostText" class="text-sm sm:text-base text-slate-200 leading-relaxed whitespace-pre-line"></div>
+
+                <!-- ОЛДИНГИ / КЕЙИНГИ МАҚОЛА ТУГМАЛАРИ -->
+                <div class="mt-7 pt-4 border-t border-slate-800 flex items-center justify-between gap-3">
+                    <button type="button" id="prevPostBtn" onclick="selectAdjacentPost(-1)"
+                            class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 disabled:opacity-40 disabled:pointer-events-none text-xs font-bold text-slate-200 transition flex items-center gap-1.5">
+                        <i class="fas fa-chevron-left"></i> Олдинги
+                    </button>
+                    <button type="button" id="nextPostBtn" onclick="selectAdjacentPost(1)"
+                            class="px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 disabled:opacity-40 disabled:pointer-events-none text-xs font-bold text-white transition flex items-center gap-1.5">
+                        Кейинги <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </section>
+
+            <!-- ЎНГ ТОМОН (4 УСТУН): МАҚОЛАЛАР РЎЙХАТИ -->
+            <aside class="lg:col-span-4 bg-slate-900/95 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl lg:sticky lg:top-24">
+                <div class="flex items-center justify-between mb-3 pb-2.5 border-b border-slate-800">
+                    <h3 class="text-sm font-black uppercase tracking-wider text-slate-100 flex items-center gap-2">
+                        <i class="fas fa-list-ul text-sky-400"></i> Мақолалар рўйхати
+                    </h3>
+                    <span id="postsCountBadge" class="px-2.5 py-0.5 rounded-full bg-sky-600/20 text-sky-400 border border-sky-500/30 text-xs font-bold">0</span>
+                </div>
+
+                <div id="postsSidebarList" class="custom-scroll space-y-2.5 max-h-[540px] overflow-y-auto pr-1"></div>
+            </aside>
+
+        </div>
+    </main>
+
+    <script>
+        const POSTS_KEY = "pop_mebel_local_posts";
+        let allPosts = [];
+        let filteredPosts = [];
+        let selectedIndex = 0;
+
+        function escapeHtml(str) {
+            return String(str || "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;");
+        }
+
+        function loadPosts() {
+            try {
+                allPosts = JSON.parse(localStorage.getItem(POSTS_KEY)) || [];
+            } catch {
+                allPosts = [];
+            }
+            filterPosts();
+        }
+
+        window.filterPosts = () => {
+            const query = (document.getElementById("searchPostInput")?.value || "").toLowerCase().trim();
+            filteredPosts = allPosts.filter(p =>
+                !query ||
+                (p.title || "").toLowerCase().includes(query) ||
+                (p.text || "").toLowerCase().includes(query)
+            );
+
+            const emptyEl = document.getElementById("emptyState");
+            const layoutEl = document.getElementById("readerLayout");
+            document.getElementById("postsCountBadge").textContent = filteredPosts.length;
+
+            if (!filteredPosts.length) {
+                emptyEl.classList.remove("hidden");
+                layoutEl.classList.add("hidden");
+                return;
+            }
+
+            emptyEl.classList.add("hidden");
+            layoutEl.classList.remove("hidden");
+            selectedIndex = 0;
+            renderSidebarList();
+            renderActivePost();
+        };
+
+        function renderSidebarList() {
+            const listEl = document.getElementById("postsSidebarList");
+            listEl.innerHTML = "";
+
+            filteredPosts.forEach((p, idx) => {
+                const isActive = idx === selectedIndex;
+                const safeTitle = escapeHtml(p.title || "Номсиз мақола");
+                const safeDate = escapeHtml(p.date || "");
+                const safePreview = escapeHtml((p.text || "").replace(/\s+/g, " ").trim());
+
+                const activeClasses = isActive
+                    ? "bg-sky-600/20 border-sky-400 text-white shadow-md"
+                    : "bg-slate-950/80 border-slate-800 hover:border-slate-600 text-slate-200";
+
+                const thumbHtml = p.image
+                    ? `<img src="${escapeHtml(p.image)}" alt="" class="w-12 h-12 rounded-lg object-cover flex-shrink-0 bg-slate-800">`
+                    : `<div class="w-12 h-12 rounded-lg bg-slate-800/90 flex items-center justify-center text-sky-400 flex-shrink-0"><i class="fas fa-file-alt text-sm"></i></div>`;
+
+                listEl.innerHTML += `
+                    <button type="button" onclick="selectPost(${idx})"
+                            class="w-full text-left p-3 rounded-xl border transition flex items-start gap-3 ${activeClasses}">
+                        ${thumbHtml}
+                        <div class="min-w-0 flex-1">
+                            <div class="flex items-center justify-between gap-2">
+                                <span class="text-[10px] font-bold ${isActive ? 'text-sky-300' : 'text-slate-400'}">#${idx + 1}</span>
+                                <span class="text-[10px] text-slate-400 truncate">${safeDate}</span>
+                            </div>
+                            <h4 class="text-xs sm:text-sm font-bold truncate mt-0.5">${safeTitle}</h4>
+                            <p class="text-[11px] text-slate-400 line-clamp-2 mt-1">${safePreview}</p>
+                        </div>
+                    </button>
+                `;
+            });
+        }
+
+        function renderActivePost() {
+            const post = filteredPosts[selectedIndex];
+            if (!post) return;
+
+            document.getElementById("activePostTitle").textContent = post.title || "";
+            document.getElementById("activePostDate").textContent = post.date || "";
+            document.getElementById("activePostText").textContent = post.text || "";
+            document.getElementById("activePostCounter").textContent = `${selectedIndex + 1} / ${filteredPosts.length}`;
+
+            const imgWrap = document.getElementById("activePostImageWrap");
+            const imgEl = document.getElementById("activePostImage");
+            if (post.image) {
+                imgEl.src = post.image;
+                imgEl.alt = post.title || "";
+                imgWrap.classList.remove("hidden");
+            } else {
+                imgEl.src = "";
+                imgWrap.classList.add("hidden");
+            }
+
+            document.getElementById("prevPostBtn").disabled = selectedIndex <= 0;
+            document.getElementById("nextPostBtn").disabled = selectedIndex >= filteredPosts.length - 1;
+        }
+
+        window.selectPost = (idx) => {
+            if (idx < 0 || idx >= filteredPosts.length) return;
+            selectedIndex = idx;
+            renderSidebarList();
+            renderActivePost();
+
+            if (window.innerWidth < 1024) {
+                document.getElementById("readerSection")?.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+        };
+
+        window.selectAdjacentPost = (delta) => {
+            selectPost(selectedIndex + delta);
+        };
+
+        loadPosts();
+    </script>
+</body>
+</html>

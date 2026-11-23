@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Галерея - Pop Mebel Ta'mirlash</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .metallic-text {
+            background: linear-gradient(180deg, #ffffff 0%, #94a3b8 50%, #475569 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="bg-black text-slate-100 font-sans min-h-screen flex flex-col">
+
+    <!-- ЮҚОРИ ПАНЕЛ -->
+    <header class="border-b border-slate-800 bg-slate-950/90 backdrop-blur-md sticky top-0 z-30">
+        <div class="max-w-7xl mx-auto px-4 py-3.5 flex flex-wrap justify-between items-center gap-3">
+            <a href="index.html" class="flex items-center gap-3">
+                <i class="fas fa-couch text-sky-400 text-2xl"></i>
+                <div>
+                    <h1 class="text-base sm:text-xl font-black metallic-text uppercase leading-tight">POP MEBEL TA'MIRLASH</h1>
+                    <p class="text-[11px] text-slate-400">Бажарилган ишлар галереяси ва карусели</p>
+                </div>
+            </a>
+            <div class="flex items-center gap-2">
+                <a href="index.html" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-xs font-bold rounded-xl transition">
+                    <i class="fas fa-home mr-1"></i> Асосий
+                </a>
+                <a href="post.html" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-sky-400 text-xs font-bold rounded-xl transition">
+                    <i class="fas fa-newspaper mr-1"></i> Мақолалар
+                </a>
+                <a href="admin.html" class="px-3 py-2 bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold rounded-xl transition">
+                    <i class="fas fa-user-shield mr-1"></i> Админ
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-6 sm:py-8 space-y-8 sm:space-y-10">
+
+        <!-- 1. АВТОМАТИК РАСМЛАР КАРУСЕЛИ -->
+        <section>
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+                <h2 class="text-base sm:text-lg font-black uppercase tracking-wider text-sky-400 flex items-center gap-2">
+                    <i class="fas fa-images"></i> Расмлар карусели
+                </h2>
+                <button type="button" id="autoToggleBtn" onclick="toggleAutoPlay()" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-bold text-emerald-400 flex items-center gap-1.5 transition">
+                    <i class="fas fa-play-circle"></i> <span id="autoToggleText">Авто: Ёқиқ</span>
+                </button>
+            </div>
+
+            <div id="carouselWrapper"
+                 onmouseenter="pauseAutoTemporary()"
+                 onmouseleave="resumeAutoTemporary()"
+                 class="relative bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden shadow-2xl">
+
+                <div id="carouselEmpty" class="hidden p-10 sm:p-14 text-center text-slate-400">
+                    <p class="mb-3 text-sm">Ҳозирча галереяда расмлар йўқ.</p>
+                    <a href="admin.html" class="inline-block px-4 py-2 bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold rounded-xl transition">
+                        Админ орқали расм юклаш
+                    </a>
+                </div>
+
+                <div id="carouselActive" class="hidden">
+                    <div class="relative h-64 sm:h-[420px] lg:h-[460px] w-full bg-slate-950 flex items-center justify-center">
+                        <img id="carouselImg"
+                             src=""
+                             alt="Галерея расми"
+                             onclick="openLightbox(currentIndex)"
+                             title="Ихчам катта кўриш учун босинг"
+                             class="w-full h-full object-cover cursor-zoom-in transition duration-500">
+
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-transparent pointer-events-none"></div>
+
+                        <button type="button" onclick="prevSlide()" aria-label="Олдинги расм"
+                                class="absolute left-2.5 sm:left-4 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-black/65 hover:bg-sky-600 text-white flex items-center justify-center transition shadow-lg">
+                            <i class="fas fa-chevron-left text-xs sm:text-sm"></i>
+                        </button>
+
+                        <button type="button" onclick="nextSlide()" aria-label="Кейинги расм"
+                                class="absolute right-2.5 sm:right-4 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-black/65 hover:bg-sky-600 text-white flex items-center justify-center transition shadow-lg">
+                            <i class="fas fa-chevron-right text-xs sm:text-sm"></i>
+                        </button>
+
+                        <div class="absolute bottom-3 sm:bottom-5 left-4 right-4 sm:left-6 sm:right-6 flex flex-col sm:flex-row sm:items-end justify-between gap-2">
+                            <div onclick="openLightbox(currentIndex)" class="cursor-pointer">
+                                <p id="carouselTitle" class="text-sm sm:text-xl font-black text-white drop-shadow"></p>
+                                <span id="carouselDate" class="text-[11px] sm:text-xs text-slate-300"></span>
+                            </div>
+                            <div class="flex items-center gap-2 self-start sm:self-auto">
+                                <button type="button" onclick="openLightbox(currentIndex)" class="text-[11px] font-bold px-2.5 py-1 rounded-full bg-slate-900/80 hover:bg-slate-800 text-sky-300 border border-slate-700 transition">
+                                    <i class="fas fa-expand mr-1"></i> Катта кўриш
+                                </button>
+                                <span id="carouselCounter" class="text-xs font-bold px-3 py-1 rounded-full bg-sky-600/90 text-white">1 / 1</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Индикатор нуқталар -->
+                    <div id="carouselDots" class="flex justify-center items-center gap-2 py-3 bg-slate-950/80 border-t border-slate-800/80"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. БАРЧА РАСМЛАР СЕТКАСИ (БОСГАНДА ИХЧАМ ОЙНАДА ОЧИЛАДИ) -->
+        <section>
+            <h2 class="text-base sm:text-lg font-black uppercase tracking-wider text-slate-200 mb-4 flex items-center gap-2">
+                <i class="fas fa-th text-sky-400"></i> Барча юкланган расмлар
+            </h2>
+            <div id="galleryGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6"></div>
+        </section>
+
+    </main>
+
+    <!-- ИХЧАМ МОДАЛ ОЙНА (LIGHTBOX) -->
+    <div id="lightboxModal"
+         onclick="handleBackdropClick(event)"
+         class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6">
+        <div class="relative w-full max-w-2xl bg-slate-900 border border-slate-700 rounded-2xl overflow-hidden shadow-2xl">
+            <div class="flex items-center justify-between px-4 py-3 bg-slate-950 border-b border-slate-800">
+                <div class="pr-3 truncate">
+                    <h3 id="lbTitle" class="text-xs sm:text-sm font-black text-white truncate"></h3>
+                    <p id="lbDate" class="text-[11px] text-slate-400"></p>
+                </div>
+                <button type="button" onclick="closeLightbox()" aria-label="Ёпиш"
+                        class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-rose-600 text-slate-200 hover:text-white flex items-center justify-center transition flex-shrink-0">
+                    <i class="fas fa-times text-sm"></i>
+                </button>
+            </div>
+
+            <div class="relative bg-black flex items-center justify-center max-h-[65vh] sm:max-h-[70vh]">
+                <img id="lbImage" src="" alt="" class="max-h-[65vh] sm:max-h-[70vh] w-auto max-w-full object-contain">
+
+                <button type="button" onclick="lightboxPrev()" aria-label="Олдинги"
+                        class="absolute left-2.5 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-slate-900/80 hover:bg-sky-600 text-white flex items-center justify-center transition">
+                    <i class="fas fa-chevron-left text-xs"></i>
+                </button>
+                <button type="button" onclick="lightboxNext()" aria-label="Кейинги"
+                        class="absolute right-2.5 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-slate-900/80 hover:bg-sky-600 text-white flex items-center justify-center transition">
+                    <i class="fas fa-chevron-right text-xs"></i>
+                </button>
+            </div>
+
+            <div class="flex items-center justify-between px-4 py-3 bg-slate-950 border-t border-slate-800 text-xs">
+                <span id="lbCounter" class="text-slate-400 font-semibold">1 / 1</span>
+                <button type="button" onclick="closeLightbox()" class="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold transition">
+                    Ёпиш
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const GALLERY_KEY = "pop_mebel_local_gallery";
+        let items = [];
+        let currentIndex = 0;
+        let lightboxIndex = 0;
+        let autoPlayEnabled = true;
+        let pausedByHover = false;
+        let carouselTimer = null;
+
+        function escapeHtml(str) {
+            return String(str || "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;");
+        }
+
+        function loadGallery() {
+            try {
+                items = JSON.parse(localStorage.getItem(GALLERY_KEY)) || [];
+            } catch {
+                items = [];
+            }
+
+            const emptyBox = document.getElementById("carouselEmpty");
+            const activeBox = document.getElementById("carouselActive");
+            const grid = document.getElementById("galleryGrid");
+            grid.innerHTML = "";
+
+            if (!items.length) {
+                stopCarouselTimer();
+                emptyBox.classList.remove("hidden");
+                activeBox.classList.add("hidden");
+                grid.innerHTML = `<p class="col-span-full text-center text-slate-500 py-8 text-sm">Галерея бўш. <a href="admin.html" class="text-sky-400 underline">Админ панел</a>дан расм қўшинг.</p>`;
+                return;
+            }
+
+            emptyBox.classList.add("hidden");
+            activeBox.classList.remove("hidden");
+            currentIndex = 0;
+            renderSlide();
+            renderDots();
+            startCarouselTimer();
+
+            items.forEach((item, idx) => {
+                const safeTitle = escapeHtml(item.title || "Таъмирланган мебел");
+                const safeDate = escapeHtml(item.date || "");
+                const safeImg = escapeHtml(item.image || "");
+
+                grid.innerHTML += `
+                    <div onclick="openLightbox(${idx})"
+                         class="group cursor-pointer bg-slate-900/95 border border-slate-800 hover:border-sky-500/70 rounded-2xl overflow-hidden shadow-lg hover:-translate-y-0.5 transition duration-200">
+                        <div class="relative overflow-hidden bg-slate-800">
+                            <img src="${safeImg}" alt="${safeTitle}" class="w-full h-48 sm:h-52 object-cover group-hover:scale-105 transition duration-300">
+                            <span class="absolute top-2.5 right-2.5 px-2.5 py-1 rounded-lg bg-black/65 text-[10px] font-bold text-sky-300">
+                                <i class="fas fa-search-plus mr-1"></i> Кўриш
+                            </span>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="text-sm font-bold text-slate-100 truncate">${safeTitle}</h3>
+                            <p class="text-[11px] text-slate-400 mt-1"><i class="far fa-calendar-alt mr-1 text-sky-400"></i>${safeDate}</p>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function renderSlide() {
+            if (!items.length) return;
+            const item = items[currentIndex];
+            document.getElementById("carouselImg").src = item.image || "";
+            document.getElementById("carouselImg").alt = item.title || "Галерея расми";
+            document.getElementById("carouselTitle").textContent = item.title || "Таъмирланган мебел";
+            document.getElementById("carouselDate").textContent = item.date || "";
+            document.getElementById("carouselCounter").textContent = `${currentIndex + 1} / ${items.length}`;
+            updateDots();
+        }
+
+        function renderDots() {
+            const dotsEl = document.getElementById("carouselDots");
+            dotsEl.innerHTML = "";
+            items.forEach((_, idx) => {
+                const btn = document.createElement("button");
+                btn.type = "button";
+                btn.ariaLabel = `Расм ${idx + 1}`;
+                btn.onclick = () => {
+                    currentIndex = idx;
+                    renderSlide();
+                    resetCarouselTimer();
+                };
+                btn.className = "w-2.5 h-2.5 rounded-full transition-all duration-200";
+                dotsEl.appendChild(btn);
+            });
+            updateDots();
+        }
+
+        function updateDots() {
+            const dots = document.querySelectorAll("#carouselDots button");
+            dots.forEach((dot, idx) => {
+                if (idx === currentIndex) {
+                    dot.className = "w-6 h-2.5 rounded-full bg-sky-400 transition-all duration-200";
+                } else {
+                    dot.className = "w-2.5 h-2.5 rounded-full bg-slate-700 hover:bg-slate-500 transition-all duration-200";
+                }
+            });
+        }
+
+        window.nextSlide = () => {
+            if (!items.length) return;
+            currentIndex = (currentIndex + 1) % items.length;
+            renderSlide();
+            resetCarouselTimer();
+        };
+
+        window.prevSlide = () => {
+            if (!items.length) return;
+            currentIndex = (currentIndex - 1 + items.length) % items.length;
+            renderSlide();
+            resetCarouselTimer();
+        };
+
+        function startCarouselTimer() {
+            stopCarouselTimer();
+            if (!autoPlayEnabled || pausedByHover || items.length <= 1) return;
+            carouselTimer = setInterval(() => {
+                currentIndex = (currentIndex + 1) % items.length;
+                renderSlide();
+            }, 4000);
+        }
+
+        function stopCarouselTimer() {
+            if (carouselTimer) {
+                clearInterval(carouselTimer);
+                carouselTimer = null;
+            }
+        }
+
+        function resetCarouselTimer() {
+            startCarouselTimer();
+        }
+
+        window.toggleAutoPlay = () => {
+            autoPlayEnabled = !autoPlayEnabled;
+            const btn = document.getElementById("autoToggleBtn");
+            const txt = document.getElementById("autoToggleText");
+            if (autoPlayEnabled) {
+                btn.className = "px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-bold text-emerald-400 flex items-center gap-1.5 transition";
+                btn.querySelector("i").className = "fas fa-play-circle";
+                txt.textContent = "Авто: Ёқиқ";
+                startCarouselTimer();
+            } else {
+                btn.className = "px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-bold text-amber-400 flex items-center gap-1.5 transition";
+                btn.querySelector("i").className = "fas fa-pause-circle";
+                txt.textContent = "Авто: Тўхтатилган";
+                stopCarouselTimer();
+            }
+        };
+
+        window.pauseAutoTemporary = () => {
+            pausedByHover = true;
+            stopCarouselTimer();
+        };
+
+        window.resumeAutoTemporary = () => {
+            pausedByHover = false;
+            startCarouselTimer();
+        };
+
+        // ИХЧАМ МОДАЛ ОЙНА ФУНКЦИЯЛАРИ
+        window.openLightbox = (idx) => {
+            if (!items.length) return;
+            lightboxIndex = idx;
+            renderLightbox();
+            document.getElementById("lightboxModal").classList.remove("hidden");
+            document.body.classList.add("overflow-hidden");
+        };
+
+        function renderLightbox() {
+            const item = items[lightboxIndex];
+            if (!item) return;
+            document.getElementById("lbImage").src = item.image || "";
+            document.getElementById("lbImage").alt = item.title || "";
+            document.getElementById("lbTitle").textContent = item.title || "Таъмирланган мебел";
+            document.getElementById("lbDate").textContent = item.date || "";
+            document.getElementById("lbCounter").textContent = `${lightboxIndex + 1} / ${items.length}`;
+        }
+
+        window.lightboxNext = () => {
+            if (!items.length) return;
+            lightboxIndex = (lightboxIndex + 1) % items.length;
+            renderLightbox();
+        };
+
+        window.lightboxPrev = () => {
+            if (!items.length) return;
+            lightboxIndex = (lightboxIndex - 1 + items.length) % items.length;
+            renderLightbox();
+        };
+
+        window.closeLightbox = () => {
+            document.getElementById("lightboxModal").classList.add("hidden");
+            document.body.classList.remove("overflow-hidden");
+        };
+
+        window.handleBackdropClick = (e) => {
+            if (e.target && e.target.id === "lightboxModal") {
+                closeLightbox();
+            }
+        };
+
+        document.addEventListener("keydown", (e) => {
+            const modal = document.getElementById("lightboxModal");
+            if (!modal || modal.classList.contains("hidden")) return;
+            if (e.key === "Escape") closeLightbox();
+            if (e.key === "ArrowRight") lightboxNext();
+            if (e.key === "ArrowLeft") lightboxPrev();
+        });
+
+        loadGallery();
+    </script>
+</body>
+</html>
